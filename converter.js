@@ -1,10 +1,30 @@
 #! /usr/bin/env node
 
 import inquirer from 'inquirer';
-import clipboard from "clipboardy";
+import clipboard from 'clipboardy';
 
 const RGB_MAX_VALUE = 255;
 const RGB_MIN_VALUE = 0;
+
+const welcomeMessage = `
+    👋 ${'Hi! I\'m a color converter.'}
+    I'm in the first place designed to convert a color in RGB format to it's hexadecimal form.
+    But I'm much more than that! You'll see.
+    
+    To start, type or paste your color in the terminal.
+    `;
+
+const rgbMessage = '(Format > r g b)  |  ';
+const hexConvertedMessage_1 = `
+    So, I converted your color`;
+const hexConvertedMessage_2 = `to it's hexadecimal value.
+    You can find this value in the clipboard of your computer and in the console.
+    `;
+
+const lastMessage = `
+    I hope I could help you. Hope to see you soon!
+    Goodbye 👋
+`;
 
 const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 
@@ -15,7 +35,7 @@ const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 * @return {boolean} True if correct user input
 * */
 function validateRgbInput(input) {
-    const message = 'You should provide three numbers between 0 and 255 seperated by a space...';
+    const message = '😞 You should provide three numbers between 0 and 255 seperated by a space...';
 
     // Check if only numbers are provided
     if (!/^\d+$/.test(input.replace(/\s/g, ''))) return message;
@@ -27,9 +47,8 @@ function validateRgbInput(input) {
     if (numbers.length !== 3) return message;
 
     // Check if provided numbers are between min and max rgb values
-    numbers.forEach(number => {
-        if (number < RGB_MIN_VALUE || number > RGB_MAX_VALUE) return message;
-    });
+    if (numbers.find(number => number < RGB_MIN_VALUE || number > RGB_MAX_VALUE)) return message;
+
     return true;
 }
 
@@ -57,22 +76,55 @@ function convertSingleRgbValueToHex(value) {
     return value;
 }
 
+function createHexConvertedMessage(rgb) {
+    return `${hexConvertedMessage_1} rgb(${rgb}) ${hexConvertedMessage_2}`;
+}
+
 /*
 * Asks the user for input and converts afterwards the color
 * */
 function askColor() {
+    console.clear();
+    console.log(welcomeMessage);
+
+    // Ask the user for a color in RGB format
     return inquirer.prompt([{
             name: 'color',
             type: 'input',
-            message: 'What is the color you want to convert?',
+            prefix: `    👊`,
+            message: rgbMessage,
             validate: validateRgbInput
         }]
     ).then((input) => {
+        // Convert RGB value to hex value
         const hex = convertRgbToHex(input.color.replace(/\s\s+/g, ' ').split(' '));
-        clipboard.writeSync(hex);
+
         console.clear();
-        console.log(hex)
+        console.log(createHexConvertedMessage(input.color.replace(/\s\s+/g, ' ')));
+        // Copy hex value to the clipboard
+        clipboard.writeSync(hex);
+        console.log(`    ${hex}`);
+        console.log();
+
+        // Ask the user if he wants to restart
+        return inquirer.prompt([{
+            name: 'end',
+            type: 'confirm',
+            default: false,
+            prefix: `    👊`,
+            message: 'Is there anything else I can do for you?'
+        }]).then((input) => {
+            if (!input.end) {
+                // End the program
+                console.log(lastMessage);
+                process.exit();
+            } else {
+                // Restart the program
+                askColor();
+            }
+        });
     });
 }
 
+// Start the program
 askColor();
