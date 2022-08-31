@@ -47,9 +47,8 @@ function validateRgbInput(input) {
     if (numbers.length !== 3) return message;
 
     // Check if provided numbers are between min and max rgb values
-    numbers.forEach(number => {
-        if (number < RGB_MIN_VALUE || number > RGB_MAX_VALUE) return message;
-    });
+    if (numbers.find(number => number < RGB_MIN_VALUE || number > RGB_MAX_VALUE)) return message;
+
     return true;
 }
 
