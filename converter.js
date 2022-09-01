@@ -2,19 +2,23 @@
 
 import inquirer from 'inquirer';
 import clipboard from 'clipboardy';
+import {ColorFormat} from './color-format.js';
 
 const RGB_MAX_VALUE = 255;
 const RGB_MIN_VALUE = 0;
 
+const prefix = '    ';
 const welcomeMessage = `
     👋 ${'Hi! I\'m a color converter.'}
     I'm in the first place designed to convert a color in RGB format to it's hexadecimal form.
     But I'm much more than that! You'll see.
     
-    To start, type or paste your color in the terminal.
     `;
 
-const rgbMessage = '(Format > r g b)  |  ';
+const startFormatMessage = 'To start, I need the format you currently have.';
+const endFormatMessage = 'Now, please select the format you want your color to be converted in.';
+
+const rgbMessage = 'Alright, now I need your color in RGB format:';
 const hexConvertedMessage_1 = `
     So, I converted your color`;
 const hexConvertedMessage_2 = `to it's hexadecimal value.
@@ -28,12 +32,14 @@ const lastMessage = `
 
 const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 
-/*
-* Checks if provided input is correct
-* @param {string} input - User input
-* @returns {string} Error message if incorrect user input
-* @return {boolean} True if correct user input
-* */
+let startFormat, endFormat;
+
+/**
+ * Checks if provided input is correct
+ * @param {string} input - User input
+ * @returns {string} Error message if incorrect user input
+ * @return {boolean} True if correct user input
+ * */
 function validateRgbInput(input) {
     const message = '😞 You should provide three numbers between 0 and 255 seperated by a space...';
 
@@ -52,22 +58,22 @@ function validateRgbInput(input) {
     return true;
 }
 
-/*
-* Converts RGB color value to hex color value
-* @param {string[3]} rgb - Array with rgb values
-* @returns {string} Hex value of color
-*  */
+/**
+ * Converts RGB color value to hex color value
+ * @param {string[3]} rgb - Array with rgb values
+ * @returns {string} Hex value of color
+ *  */
 function convertRgbToHex(rgb) {
     let hex = '#';
     rgb.forEach(value => hex += convertSingleRgbValueToHex(value));
     return hex;
 }
 
-/*
-* Converts a single RGB value to its hexadecimal form
-* @param {string} value - Single RGB value
-* @returns {string} Hexadecimal form of the input
-* */
+/**
+ * Converts a single RGB value to its hexadecimal form
+ * @param {string} value - Single RGB value
+ * @returns {string} Hexadecimal form of the input
+ * */
 function convertSingleRgbValueToHex(value) {
     value = parseInt(value).toString(16);
 
@@ -80,22 +86,43 @@ function createHexConvertedMessage(rgb) {
     return `${hexConvertedMessage_1} rgb(${rgb}) ${hexConvertedMessage_2}`;
 }
 
-/*
-* Asks the user for input and converts afterwards the color
-* */
+/**
+ * Asks the user for input and converts afterwards the color
+ */
 function askColor() {
     console.clear();
     console.log(welcomeMessage);
 
-    // Ask the user for a color in RGB format
+    // Ask the user for the start format of the color
     return inquirer.prompt([{
+        name: 'startFormat',
+        type: 'list',
+        prefix: prefix,
+        message: startFormatMessage,
+        choices: Object.values(ColorFormat).map(colorFormat => colorFormat.displayNameLong)
+    }]).then((input) => {
+        startFormat = ColorFormat.getColorFormat(input.startFormat);
+
+        // Ask the user for the end format of the color
+        return inquirer.prompt([{
+            name: 'endFormat',
+            type: 'list',
+            prefix: prefix,
+            message: endFormatMessage,
+            choices: Object.values(ColorFormat).filter(colorFormat => colorFormat !== startFormat).map(colorFormat => colorFormat.displayNameLong)
+        }]);
+    }).then((input) => {
+        endFormat = input.endFormat;
+
+        // Ask the user for a color in RGB format
+        return inquirer.prompt([{
             name: 'color',
             type: 'input',
-            prefix: `    👊`,
+            prefix: prefix,
             message: rgbMessage,
             validate: validateRgbInput
-        }]
-    ).then((input) => {
+        }]);
+    }).then((input) => {
         // Convert RGB value to hex value
         const hex = convertRgbToHex(input.color.replace(/\s\s+/g, ' ').split(' '));
 
@@ -111,7 +138,7 @@ function askColor() {
             name: 'end',
             type: 'confirm',
             default: false,
-            prefix: `    👊`,
+            prefix: prefix,
             message: 'Is there anything else I can do for you?'
         }]).then((input) => {
             if (!input.end) {
