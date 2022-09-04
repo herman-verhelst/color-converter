@@ -4,7 +4,6 @@ import inquirer from 'inquirer';
 import clipboard from 'clipboardy';
 import {ColorFormat} from './color-format.js';
 import {validateRgbInput} from './validator.js';
-import {convertRgbToHex} from './converter.js';
 
 const prefix = '    ';
 const welcomeMessage = `
@@ -63,7 +62,7 @@ function askColor() {
             choices: Object.values(ColorFormat).filter(colorFormat => colorFormat !== startFormat).map(colorFormat => colorFormat.displayNameLong)
         }]);
     }).then((input) => {
-        endFormat = input.endFormat;
+        endFormat = ColorFormat.getColorFormat(input.endFormat);
 
         // Ask the user for a color in RGB format
         return inquirer.prompt([{
@@ -74,8 +73,8 @@ function askColor() {
             validate: validateRgbInput
         }]);
     }).then((input) => {
-        // Convert RGB value to hex value
-        const hex = convertRgbToHex(input.color.replace(/\s\s+/g, ' ').split(' '));
+        // Convert start value to end value
+        const hex = startFormat.converters(endFormat, input.color)
 
         console.clear();
         console.log(createHexConvertedMessage(input.color.replace(/\s\s+/g, ' ')));
@@ -86,13 +85,13 @@ function askColor() {
 
         // Ask the user if he wants to restart
         return inquirer.prompt([{
-            name: 'end',
+            name: 'again',
             type: 'confirm',
             default: false,
             prefix: prefix,
             message: 'Is there anything else I can do for you?'
         }]).then((input) => {
-            if (!input.end) {
+            if (!input.again) {
                 // End the program
                 console.log(lastMessage);
                 process.exit();

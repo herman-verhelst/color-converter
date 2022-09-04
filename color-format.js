@@ -1,10 +1,13 @@
+import {convertRgb} from './converters/rgb-converters.js';
+
 export class ColorFormat {
-    static RGB = new ColorFormat('RGB', 'RGB');
+    static RGB = new ColorFormat('RGB', 'RGB', convertRgb);
     static HEX = new ColorFormat('hex', 'Hexadecimal');
 
-    constructor(displayNameShort, displayNameLong) {
+    constructor(displayNameShort, displayNameLong, converters) {
         this.displayNameShort = displayNameShort;
         this.displayNameLong = displayNameLong;
+        this.converters = converters;
     }
 
     /**
