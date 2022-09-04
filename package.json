@@ -2,7 +2,7 @@
   "name": "color-converter",
   "version": "1.0.0",
   "description": "",
-  "main": "converter.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "lint": "eslint *.js",
