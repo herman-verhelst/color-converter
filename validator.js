@@ -1,4 +1,4 @@
-import {validateRgbMessage} from './messages.js';
+import {validateHexMessage, validateRgbMessage} from './messages.js';
 
 const RGB_MAX_VALUE = 255;
 const RGB_MIN_VALUE = 0;
@@ -9,7 +9,7 @@ const RGB_MIN_VALUE = 0;
  * @returns {string | boolean} Error message if invalid user input | True if valid user input
  */
 export function validateRgbInput(input) {
-    input = input.replace(/\s\s+/g, ' ').replace(/(\(|\s\s+|rgb|,|\))/g, '')
+    input = input.replace(/\s\s+/g, ' ').replace(/(\(|\s\s+|rgb|,|\))/g, '');
 
     // Check if only numbers, 'rgb', brackets or commas are provided
     if (!/^(?=.*\d)[\d ]+$/.test(input)) return validateRgbMessage;
@@ -32,17 +32,15 @@ export function validateRgbInput(input) {
  * @returns {string | boolean} Error message if invalid user input | True if valid user input
  */
 export function validateHexInput(input) {
-    const message = 'You should provide a valid hex color value...';
-
     // Check if input is of desired length
-    if (input.length !== 7 || input.length !== 4) return message;
+    if (input.length !== 7 && input.length !== 4) return validateHexMessage;
 
     // Check if first character is a #
-    if (input[0] !== '#') return message;
+    if (input[0] !== '#') return validateHexMessage;
 
     // Check if last characters are valid hex values
-    const regex = /[0-9A-Fa-f]{6}/g;
-    if (!regex.test(input.substring(1))) return message;
+    const regex = /[0-9A-Fa-f]{3,6}/g;
+    if (!regex.test(input.substring(1))) return validateHexMessage;
 
     return true;
 }
