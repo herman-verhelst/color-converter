@@ -23,7 +23,7 @@ export function convertRgb(colorFormat, input) {
  */
 export function convertRgbToHex(input) {
     // Convert user input in number array
-    const rgb = input.replace(/\s\s+/g, ' ').split(' ').map(value => parseInt(value))
+    const rgb = input.replace(/\s\s+/g, ' ').replace(/(\(|\s\s+|rgb|,|\))/g, '').split(' ').map(value => parseInt(value))
 
     let hex = '#';
     rgb.forEach(value => hex += convertSingleRgbValueToHex(value));

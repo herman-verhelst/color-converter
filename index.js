@@ -6,7 +6,7 @@ import {ColorFormat} from './color-format.js';
 
 const prefix = '    ';
 const welcomeMessage = `
-    👋 ${'Hi! I\'m a color converter.'}
+    👋 Hi! I'm a color converter.
     I'm in the first place designed to convert a color in RGB format to it's hexadecimal form.
     But I'm much more than that! You'll see.
     

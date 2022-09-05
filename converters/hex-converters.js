@@ -22,7 +22,11 @@ export function convertHex(colorFormat, input) {
  * @returns {string} RGB value of color
  */
 export function convertHexToRgb(input) {
-    return `rgb(${convertSingleHexValueToRgb(input[1], input[2])} ${convertSingleHexValueToRgb(input[3], input[4])} ${convertSingleHexValueToRgb(input[5], input[6])})`;
+    input = input.substring(1);
+    if (input.length === 3) {
+        return `rgb(${convertSingleHexValueToRgb(input[0], input[0])} ${convertSingleHexValueToRgb(input[1], input[1])} ${convertSingleHexValueToRgb(input[2], input[2])})`;
+    }
+    return `rgb(${convertSingleHexValueToRgb(input[0], input[1])} ${convertSingleHexValueToRgb(input[2], input[3])} ${convertSingleHexValueToRgb(input[4], input[5])})`;
 }
 
 /**

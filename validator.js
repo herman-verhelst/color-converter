@@ -33,7 +33,7 @@ export function validateHexInput(input) {
     const message = 'You should provide a valid hex color value...';
 
     // Check if input is of desired length
-    if (input.length !== 7) return message;
+    if (input.length !== 7 || input.length !== 4) return message;
 
     // Check if first character is a #
     if (input[0] !== '#') return message;
