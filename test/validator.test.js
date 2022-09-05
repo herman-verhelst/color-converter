@@ -1,5 +1,5 @@
-import {validateHexInput, validateRgbInput} from '../validator.js';
-import {validateHexMessage, validateRgbMessage} from '../messages.js';
+import {validateHexInput, validateRgbInput} from '../src/validator.js';
+import {validateHexMessage, validateRgbMessage} from '../src/messages.js';
 
 const rgbCases = [
     ['rgb(255 255 255)', true],

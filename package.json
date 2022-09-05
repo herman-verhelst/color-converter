@@ -2,14 +2,14 @@
   "name": "color-converter",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "lint": "eslint *.js",
     "lint:fix": "eslint --fix *.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
-  "bin": "./index.js",
+  "bin": "src/index.js",
   "keywords": [],
   "author": "",
   "license": "ISC",

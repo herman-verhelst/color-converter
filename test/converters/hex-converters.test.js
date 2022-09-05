@@ -1,4 +1,4 @@
-import {convertHexToRgb} from '../../converters/hex-converters.js';
+import {convertHexToRgb} from '../../src/converters/hex-converters.js';
 
 const hexToRgbCases = [
     ['#ffffff', 'rgb(255 255 255)'],
