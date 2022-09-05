@@ -3,7 +3,6 @@
 import inquirer from 'inquirer';
 import clipboard from 'clipboardy';
 import {ColorFormat} from './color-format.js';
-import {validateRgbInput} from './validator.js';
 
 const prefix = '    ';
 const welcomeMessage = `
@@ -16,7 +15,6 @@ const welcomeMessage = `
 const startFormatMessage = 'To start, I need the format you currently have.';
 const endFormatMessage = 'Now, please select the format you want your color to be converted in.';
 
-const rgbMessage = 'Alright, now I need your color in RGB format:';
 const hexConvertedMessage_1 = `
     So, I converted your color`;
 const hexConvertedMessage_2 = `to it's hexadecimal value.
@@ -27,8 +25,6 @@ const lastMessage = `
     I hope I could help you. Hope to see you soon!
     Goodbye 👋
 `;
-
-const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 
 let startFormat, endFormat;
 
@@ -64,23 +60,23 @@ function askColor() {
     }).then((input) => {
         endFormat = ColorFormat.getColorFormat(input.endFormat);
 
-        // Ask the user for a color in RGB format
+        // Ask the user for a color in the selected start format
         return inquirer.prompt([{
             name: 'color',
             type: 'input',
             prefix: prefix,
-            message: rgbMessage,
-            validate: validateRgbInput
+            message: startFormat.inputMessage,
+            validate: startFormat.validator
         }]);
     }).then((input) => {
         // Convert start value to end value
-        const hex = startFormat.converters(endFormat, input.color)
+        const endValue = startFormat.converters(endFormat, input.color);
 
         console.clear();
         console.log(createHexConvertedMessage(input.color.replace(/\s\s+/g, ' ')));
         // Copy hex value to the clipboard
-        clipboard.writeSync(hex);
-        console.log(`    ${hex}`);
+        clipboard.writeSync(endValue);
+        console.log(`    ${endValue}`);
         console.log();
 
         // Ask the user if he wants to restart

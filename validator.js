@@ -23,3 +23,7 @@ export function validateRgbInput(input) {
 
     return true;
 }
+
+export function validateHexInput(input) {
+    return true;
+}

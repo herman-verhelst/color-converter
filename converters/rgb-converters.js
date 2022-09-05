@@ -12,7 +12,7 @@ export function convertRgb(colorFormat, input) {
         case ColorFormat.HEX:
             return convertRgbToHex(input);
         default:
-            throw new Error('Not a valid color format');
+            throw new Error('Not a valid color format...');
     }
 }
 
@@ -20,7 +20,7 @@ export function convertRgb(colorFormat, input) {
  * Converts RGB color value to hex color value
  * @param {string} input - User input value
  * @returns {string} Hex value of color
- *  */
+ */
 export function convertRgbToHex(input) {
     // Convert user input in number array
     const rgb = input.replace(/\s\s+/g, ' ').split(' ').map(value => parseInt(value))
@@ -34,7 +34,7 @@ export function convertRgbToHex(input) {
  * Converts a single RGB value to its hexadecimal form
  * @param {number} value - Single RGB value
  * @returns {string} Hexadecimal form of the input
- * */
+ */
 function convertSingleRgbValueToHex(value) {
     let hexValue = value.toString(16);
 

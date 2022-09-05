@@ -1,13 +1,18 @@
 import {convertRgb} from './converters/rgb-converters.js';
+import {validateHexInput, validateRgbInput} from './validator.js';
+import {hexMessage, rgbMessage} from './messages.js';
+import {convertHex} from './converters/hex-converters.js';
 
 export class ColorFormat {
-    static RGB = new ColorFormat('RGB', 'RGB', convertRgb);
-    static HEX = new ColorFormat('hex', 'Hexadecimal');
+    static RGB = new ColorFormat('RGB', 'RGB', convertRgb, rgbMessage, validateRgbInput);
+    static HEX = new ColorFormat('hex', 'Hexadecimal', convertHex, hexMessage, validateHexInput);
 
-    constructor(displayNameShort, displayNameLong, converters) {
+    constructor(displayNameShort, displayNameLong, converters, inputMessage, validator) {
         this.displayNameShort = displayNameShort;
         this.displayNameLong = displayNameLong;
         this.converters = converters;
+        this.inputMessage = inputMessage;
+        this.validator = validator;
     }
 
     /**
@@ -23,7 +28,7 @@ export class ColorFormat {
             case ColorFormat.HEX.displayNameLong:
                 return ColorFormat.HEX;
             default:
-                throw new Error('Not a valid color format');
+                throw new Error('Not a valid color format...');
         }
     }
 }
