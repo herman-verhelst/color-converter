@@ -15,22 +15,12 @@ const welcomeMessage = `
 const startFormatMessage = 'To start, I need the format you currently have.';
 const endFormatMessage = 'Now, please select the format you want your color to be converted in.';
 
-const hexConvertedMessage_1 = `
-    So, I converted your color`;
-const hexConvertedMessage_2 = `to it's hexadecimal value.
-    You can find this value in the clipboard of your computer and in the console.
-    `;
-
 const lastMessage = `
-    I hope I could help you. Hope to see you soon!
+    I hope I could help you. See you soon!
     Goodbye 👋
 `;
 
 let startFormat, endFormat;
-
-function createHexConvertedMessage(rgb) {
-    return `${hexConvertedMessage_1} rgb(${rgb}) ${hexConvertedMessage_2}`;
-}
 
 /**
  * Asks the user for input and converts afterwards the color
@@ -73,7 +63,7 @@ function askColor() {
         const endValue = startFormat.converters(endFormat, input.color);
 
         console.clear();
-        console.log(createHexConvertedMessage(input.color.replace(/\s\s+/g, ' ')));
+        console.log(startFormat.convertedMessageCreator(input.color));
         // Copy hex value to the clipboard
         clipboard.writeSync(endValue);
         console.log(`    ${endValue}`);
