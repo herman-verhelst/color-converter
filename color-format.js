@@ -1,11 +1,11 @@
 import {convertRgb} from './converters/rgb-converters.js';
 import {validateHexInput, validateRgbInput} from './validator.js';
-import {hexMessage, rgbMessage} from './messages.js';
+import {inputHexMessage, inputRgbMessage} from './messages.js';
 import {convertHex} from './converters/hex-converters.js';
 
 export class ColorFormat {
-    static RGB = new ColorFormat('RGB', 'RGB', convertRgb, rgbMessage, validateRgbInput);
-    static HEX = new ColorFormat('hex', 'Hexadecimal', convertHex, hexMessage, validateHexInput);
+    static RGB = new ColorFormat('RGB', 'RGB', convertRgb, inputRgbMessage, validateRgbInput);
+    static HEX = new ColorFormat('hex', 'Hexadecimal', convertHex, inputHexMessage, validateHexInput);
 
     constructor(displayNameShort, displayNameLong, converters, inputMessage, validator) {
         this.displayNameShort = displayNameShort;

@@ -1,3 +1,5 @@
+import {validateRgbMessage} from './messages.js';
+
 const RGB_MAX_VALUE = 255;
 const RGB_MIN_VALUE = 0;
 
@@ -7,19 +9,19 @@ const RGB_MIN_VALUE = 0;
  * @returns {string | boolean} Error message if invalid user input | True if valid user input
  */
 export function validateRgbInput(input) {
-    const message = 'You should provide three numbers between 0 and 255 seperated by a space...';
+    input = input.replace(/\s\s+/g, ' ').replace(/(\(|\s\s+|rgb|,|\))/g, '')
 
-    // Check if only numbers are provided
-    if (!/^\d+$/.test(input.replace(/\s/g, ''))) return message;
+    // Check if only numbers, 'rgb', brackets or commas are provided
+    if (!/^(?=.*\d)[\d ]+$/.test(input)) return validateRgbMessage;
 
     // Replace extra whitespaces and create array with provided numbers
     let numbers = input.replace(/\s\s+/g, ' ').split(' ');
 
     // Check if only three numbers are provided
-    if (numbers.length !== 3) return message;
+    if (numbers.length !== 3) return validateRgbMessage;
 
     // Check if provided numbers are between min and max rgb values
-    if (numbers.find(number => number < RGB_MIN_VALUE || number > RGB_MAX_VALUE)) return message;
+    if (numbers.find(number => number < RGB_MIN_VALUE || number > RGB_MAX_VALUE)) return validateRgbMessage;
 
     return true;
 }
